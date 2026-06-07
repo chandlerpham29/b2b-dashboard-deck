@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>B2B Business Overview Dashboard · Deck</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #0f1117;
+    --surface:   #1a1d27;
+    --surface2:  #242736;
+    --border:    #2e3248;
+    --accent:    #4f8ef7;
+    --accent2:   #7c3aed;
+    --sky:       #0ea5e9;
+    --green:     #22c55e;
+    --amber:     #f59e0b;
+    --red:       #ef4444;
+    --text:      #f0f2f8;
+    --muted:     #8b92b3;
+    --chip-bg:   #1e2235;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Progress bar ─────────────────────────────────────────────── */
+  #progress {
+    height: 3px;
+    background: var(--border);
+    flex-shrink: 0;
+  }
+  #progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transition: width .35s ease;
+  }
+
+  /* ── Slide container ──────────────────────────────────────────── */
+  #deck {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 64px 80px;
+    /* default: off-screen right, invisible */
+    opacity: 0;
+    transform: translateX(40px);
+    visibility: hidden;
+    transition: opacity .35s ease, transform .35s ease, visibility 0s .35s;
+    pointer-events: none;
+  }
+  .slide.active {
+    opacity: 1;
+    transform: translateX(0);
+    visibility: visible;
+    pointer-events: all;
+    transition: opacity .35s ease, transform .35s ease, visibility 0s 0s;
+  }
+  /* exit: slide out to the left */
+  .slide.exit {
+    opacity: 0;
+    transform: translateX(-40px);
+    visibility: visible;
+    pointer-events: none;
+    transition: opacity .35s ease, transform .35s ease, visibility 0s .35s;
+  }
+
+  .slide-inner {
+    width: 100%;
+    max-width: 920px;
+  }
+
+  /* ── Navigation ───────────────────────────────────────────────── */
+  #nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 16px 24px;
+    border-top: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  .nav-btn {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 8px 22px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background .2s, border-color .2s;
+  }
+  .nav-btn:hover { background: var(--surface); border-color: var(--accent); }
+  .nav-btn:disabled { opacity: .35; cursor: default; }
+
+  #slide-counter {
+    font-size: 13px;
+    color: var(--muted);
+    min-width: 80px;
+    text-align: center;
+  }
+
+  .dot-row {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+  .dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--border);
+    cursor: pointer;
+    transition: background .2s, transform .2s;
+  }
+  .dot.active { background: var(--accent); transform: scale(1.4); }
+
+  /* ── Typography helpers ───────────────────────────────────────── */
+  .eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+  h1.hero { font-size: 52px; font-weight: 700; line-height: 1.1; }
+  h2.title { font-size: 36px; font-weight: 700; line-height: 1.15; }
+  h3.sub { font-size: 22px; font-weight: 600; }
+  .body { font-size: 16px; color: var(--muted); line-height: 1.7; }
+  .body strong { color: var(--text); }
+  .accent-word { color: var(--accent); }
+  .accent2-word { color: var(--accent2); }
+
+  /* ── Cards / Chips ────────────────────────────────────────────── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 24px;
+  }
+  .card-sm {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 18px;
+  }
+
+  .chip {
+    display: inline-block;
+    background: var(--chip-bg);
+    border: 1px solid var(--border);
+    border-radius: 99px;
+    padding: 4px 12px;
+    font-size: 12px;
+    color: var(--muted);
+    margin: 2px;
+  }
+  .chip.green  { border-color: var(--green); color: var(--green); }
+  .chip.amber  { border-color: var(--amber); color: var(--amber); }
+  .chip.red    { border-color: var(--red);   color: var(--red); }
+  .chip.accent { border-color: var(--accent); color: var(--accent); }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .pill .dot-icon {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+  }
+
+  /* ── Agenda list ──────────────────────────────────────────────── */
+  .agenda-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .agenda-item:last-child { border-bottom: none; }
+  .agenda-num {
+    flex-shrink: 0;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+    margin-top: 2px;
+  }
+
+  /* ── Metric row ───────────────────────────────────────────────── */
+  .metric-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .metric-box {
+    flex: 1;
+    min-width: 130px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+  }
+  .metric-box .val {
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .metric-box .lbl { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+
+  /* ── Two columns ──────────────────────────────────────────────── */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .three-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+  }
+
+  /* ── Feature list ─────────────────────────────────────────────── */
+  .feat-list { list-style: none; }
+  .feat-list li {
+    padding: 8px 0;
+    padding-left: 20px;
+    position: relative;
+    font-size: 15px;
+    color: var(--muted);
+    line-height: 1.55;
+    border-bottom: 1px solid var(--border);
+  }
+  .feat-list li:last-child { border-bottom: none; }
+  .feat-list li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .feat-list li strong { color: var(--text); }
+
+  /* ── Tab card ─────────────────────────────────────────────────── */
+  .tab-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 22px;
+    height: 100%;
+  }
+  .tab-card .tab-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+  }
+  .tab-card h4 { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+  .tab-card .desc { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 12px; }
+  .tab-card .metrics { display: flex; flex-wrap: wrap; gap: 6px; }
+
+  /* ── Attainment bar ───────────────────────────────────────────── */
+  .att-row { margin-bottom: 12px; }
+  .att-label { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px; }
+  .att-bar-track { height: 8px; background: var(--border); border-radius: 99px; overflow: hidden; }
+  .att-bar-fill { height: 100%; border-radius: 99px; }
+
+  /* ── Code-like ────────────────────────────────────────────────── */
+  .code-block {
+    background: #0d1117;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 20px;
+    font-family: "SF Mono", "Fira Code", monospace;
+    font-size: 13px;
+    color: #7dd3fc;
+    margin-top: 12px;
+  }
+  .code-block .comment { color: #4a5568; }
+  .code-block .string  { color: #86efac; }
+  .code-block .keyword { color: #c4b5fd; }
+
+  /* ── Tag strip ────────────────────────────────────────────────── */
+  .tag-strip { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+  .tag {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 3px 10px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  /* ── Title bar decoration ─────────────────────────────────────── */
+  .accent-bar {
+    width: 48px; height: 4px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 2px;
+    margin-bottom: 20px;
+  }
+
+  /* ── Separator ────────────────────────────────────────────────── */
+  hr.sep { border: none; border-top: 1px solid var(--border); margin: 18px 0; }
+
+  /* ── Status badge ─────────────────────────────────────────────── */
+  .badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .badge.green  { background: rgba(34,197,94,.15); color: var(--green); }
+  .badge.amber  { background: rgba(245,158,11,.15); color: var(--amber); }
+  .badge.red    { background: rgba(239,68,68,.15);  color: var(--red); }
+
+  /* slide number top-right */
+  .slide-label {
+    position: absolute;
+    top: 24px; right: 36px;
+    font-size: 12px;
+    color: var(--border);
+    font-weight: 500;
+    letter-spacing: .08em;
+  }
+
+  /* ── Walkthrough grid (combined tab slide) ─────────────────────── */
+  .walk-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  .walk-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .walk-item img {
+    width: 100%;
+    height: 88px;
+    object-fit: cover;
+    object-position: top;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+  }
+  .walk-item .walk-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .walk-item .walk-desc {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  .walk-item.span-full {
+    grid-column: 1 / -1;
+    max-width: 50%;
+    justify-self: center;
+  }
+
+  /* ── Metric detail tables (walkthrough slides) ─────────────────── */
+  .tab-detail-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .tab-detail-header img {
+    width: 200px;
+    height: 72px;
+    object-fit: cover;
+    object-position: top;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .date-badge {
+    display: inline-block;
+    background: rgba(79,142,247,.12);
+    border: 1px solid var(--accent);
+    border-radius: 99px;
+    padding: 3px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: .05em;
+  }
+  .metric-table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    max-height: 420px;
+    overflow-y: auto;
+  }
+  .metric-table-wrap.tall { max-height: 480px; }
+  .metric-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  .metric-table thead th {
+    background: var(--surface2);
+    color: var(--text);
+    font-weight: 600;
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+  }
+  .metric-table tbody td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--muted);
+    line-height: 1.55;
+    vertical-align: top;
+  }
+  .metric-table tbody td:first-child {
+    color: var(--accent);
+    font-weight: 700;
+    white-space: nowrap;
+    width: 22%;
+  }
+  .metric-table tbody td.tab-col {
+    color: var(--sky);
+    font-weight: 700;
+    vertical-align: top;
+    background: rgba(14,165,233,.08);
+    width: 15%;
+    font-size: 13px;
+    line-height: 1.4;
+  }
+  .metric-table tbody td.metric-col {
+    color: var(--accent);
+    font-weight: 700;
+    white-space: normal;
+    width: 20%;
+    font-size: 13px;
+  }
+  .metric-table.all-metrics { font-size: 14px; }
+  .metric-table.all-metrics tbody td { padding: 9px 12px; }
+  .metric-table.all-metrics thead th:first-child { color: var(--sky); }
+  .metric-table tbody tr:last-child td { border-bottom: none; }
+
+  .tab-slide-intro {
+    font-size: 15px;
+    color: var(--muted);
+    line-height: 1.65;
+    margin-bottom: 16px;
+    max-width: 900px;
+  }
+  .tab-slide-intro strong { color: var(--text); }
+  .tab-slide-header { margin-bottom: 4px; }
+
+  /* ── Q&A closing slide ─────────────────────────────────────────── */
+  .qa-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    max-width: 720px;
+    margin: 0 auto 32px;
+    text-align: left;
+  }
+  .qa-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 22px 24px;
+  }
+  .qa-card.highlight {
+    border-color: var(--accent);
+    background: rgba(79,142,247,.06);
+    grid-column: 1 / -1;
+    text-align: center;
+  }
+  .qa-card .qa-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .qa-topics {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+  }
+  .qa-topic {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .qa-thanks {
+    font-size: 18px;
+    color: var(--muted);
+    margin-top: 8px;
+  }
+
+  .slide-inner.wide { max-width: 960px; }
+  .slide-inner.compact-slide { max-width: 960px; }
+  .slide.compact-slide { padding: 48px 64px; }
+
+  /* ── Slide 4 tool comparison ─────────────────────────────────────── */
+  .slide.slide-fit {
+    padding: 40px 64px;
+    justify-content: center;
+    align-items: center;
+  }
+  .slide.slide-fit .slide-inner {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  .tool-compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 12px;
+  }
+  .tool-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .tool-card .tool-name {
+    font-size: 16px;
+    font-weight: 700;
+    text-align: center;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .tool-card.streamlit .tool-name { color: var(--accent); }
+  .tool-card.looker .tool-name { color: var(--sky); }
+  .tool-card.hubspot .tool-name { color: var(--amber); }
+  .pc-block .pc-label {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    margin-bottom: 5px;
+  }
+  .pc-block.pros .pc-label { color: var(--green); }
+  .pc-block.cons .pc-label { color: var(--red); }
+  .pc-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .pc-list li {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.45;
+    padding: 3px 0 3px 14px;
+    position: relative;
+  }
+  .pc-list li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: var(--border);
+  }
+  .pc-list li strong { color: var(--text); }
+  .conclusion-box {
+    border-color: var(--green);
+    background: rgba(34,197,94,.06);
+    padding: 12px 16px;
+    font-size: 15px;
+    line-height: 1.55;
+  }
+  .conclusion-box .conclusion-label {
+    color: var(--green);
+    font-weight: 700;
+  }
+  .conclusion-box .conclusion-text { color: var(--muted); }
+
+  .slide-fit .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    margin-bottom: 6px;
+  }
+  .three-col-tight {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .three-col-tight .card-sm { padding: 10px 12px; }
+
+  /* ── Tab overview grid (slides 7/8 — sky blue accents) ──────────── */
+  .tab-overview-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .tab-overview-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--sky);
+    border-radius: 8px;
+    padding: 14px 16px;
+  }
+  .tab-overview-card .tab-num {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--sky);
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    margin-bottom: 4px;
+  }
+  .tab-overview-card h4 {
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: var(--text);
+  }
+  .tab-overview-card .tab-date {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--sky);
+    background: rgba(14,165,233,.12);
+    border: 1px solid rgba(14,165,233,.35);
+    border-radius: 99px;
+    padding: 2px 10px;
+    margin-bottom: 8px;
+  }
+  .tab-overview-card p {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  .tab-overview-card p strong { color: var(--text); }
+  .tab-overview-card.span-full { grid-column: 1 / -1; }
+  .date-callout {
+    background: rgba(79,142,247,.08);
+    border: 1px solid var(--accent);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+  .date-callout strong { color: var(--text); }
+</style>
+</head>
+<body>
+
+<div id="progress"><div id="progress-fill"></div></div>
+
+<div id="deck">
+
+  <!-- ───────────────────────── SLIDE 0 · Cover ───────────────────────── -->
+  <div class="slide active" id="s0">
+    <div class="slide-inner" style="text-align:center;">
+      <div style="margin-bottom:28px; display:flex; justify-content:center; gap:10px; flex-wrap:wrap;">
+        <span class="pill"><span class="dot-icon" style="background:var(--green)"></span>Live on Snowflake</span>
+        <span class="pill"><span class="dot-icon" style="background:var(--accent)"></span>Streamlit App</span>
+        <span class="pill"><span class="dot-icon" style="background:var(--accent2)"></span>HubSpot CRM</span>
+      </div>
+      <div class="eyebrow">ELSA Corp · Sales Intelligence</div>
+      <h1 class="hero" style="margin-bottom:20px;">
+        B2B Business<br>
+        <span class="accent-word">Overview</span> Dashboard
+      </h1>
+      <p class="body" style="max-width:580px; margin:0 auto 32px;">
+        A guided walkthrough of the new QBR Streamlit dashboard —
+        what it tracks, how to read it, and how to get the most from it.
+      </p>
+      <div style="display:flex; justify-content:center; gap:10px; flex-wrap:wrap;">
+        <span class="chip accent">QBR Scorecard</span>
+        <span class="chip accent">Booking &amp; Forecasting</span>
+        <span class="chip accent">Active ACV Snapshot</span>
+        <span class="chip accent">Pipeline Creation</span>
+        <span class="chip accent">Sales Analytics</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───────────────────────── SLIDE 2 · Agenda ─────────────────────── -->
+  <div class="slide" id="s1">
+    <div class="slide-inner">
+      <div class="slide-label">02 / AGENDA</div>
+      <div class="accent-bar"></div>
+      <div class="eyebrow">What we'll cover</div>
+      <h2 class="title" style="margin-bottom:24px;">Agenda</h2>
+
+      <div class="agenda-item">
+        <div class="agenda-num">1</div>
+        <div>
+          <div style="font-weight:600; margin-bottom:3px;">The Purpose of Having the Dashboard</div>
+          <div class="body" style="font-size:14px;">Why we built it, what questions it answers, and where the data comes from</div>
+        </div>
+      </div>
+      <div class="agenda-item">
+        <div class="agenda-num">2</div>
+        <div>
+          <div style="font-weight:600; margin-bottom:3px;">Streamlit Introduction</div>
+          <div class="body" style="font-size:14px;">What Streamlit is and why we chose it over Looker and HubSpot</div>
+        </div>
+      </div>
+      <div class="agenda-item">
+        <div class="agenda-num">3</div>
+        <div>
+          <div style="font-weight:600; margin-bottom:3px;">Dashboard Overview &amp; Walkthrough</div>
+          <div class="body" style="font-size:14px;">Tab overview, metric definitions, and how to access the dashboard</div>
+        </div>
+      </div>
+      <div class="agenda-item">
+        <div class="agenda-num">4</div>
+        <div>
+          <div style="font-weight:600; margin-bottom:3px;">Q&amp;A</div>
+          <div class="body" style="font-size:14px;">Open discussion, next steps, and how to get support</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─────────────────── SLIDE 3 · Purpose of the Dashboard ─────────── -->
+  <div class="slide" id="s2">
+    <div class="slide-inner">
+      <div class="slide-label">03 / PURPOSE</div>
+      <div class="accent-bar"></div>
+      <div class="eyebrow">Why this dashboard exists</div>
+      <h2 class="title" style="margin-bottom:14px;">Purpose of the <span class="accent-word">B2B Overview</span></h2>
+      <p class="body" style="margin-bottom:22px; max-width:800px;">
+        The <strong>B2B Business Overview</strong> dashboard is the central QBR reporting surface for ELSA's sales leadership and regional teams.
+        It consolidates HubSpot CRM data, revenue bookings, pipeline health, and goal attainment into a
+        <strong>single, always-fresh view</strong> — replacing manual spreadsheet decks and ensuring everyone works from the same source of truth.
+      </p>
+
+      <div class="two-col">
+        <div class="card-sm">
+          <div style="font-size:13px; font-weight:700; color:var(--accent); margin-bottom:6px;">Key questions it answers</div>
+          <ul class="feat-list" style="font-size:13px;">
+            <li>Are we <strong>on track to hit our targets</strong> — or already behind?</li>
+            <li>Where are we <strong>right now</strong> — current bookings, pipeline, and coverage?</li>
+            <li>How did we perform <strong>last quarter</strong> — deals closed, trials completed, win rate?</li>
+            <li>Which teams or regions are <strong>ahead or behind</strong> on their goals?</li>
+          </ul>
+        </div>
+        <div class="card-sm">
+          <div style="font-size:13px; font-weight:700; color:var(--accent); margin-bottom:6px;">Data sources</div>
+          <ul class="feat-list" style="font-size:13px;">
+            <li><strong>HubSpot</strong> — deals, pipeline stages, and most operational metrics</li>
+            <li><strong>Quarterly goals</strong> — updated manually when targets are set (fixed each quarter)</li>
+            <li><strong>GRR</strong> — sourced from the GRR dashboard, not HubSpot</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───────────── SLIDE 4 · Why Streamlit Instead of Looker ────────── -->
+  <div class="slide slide-fit" id="s3">
+    <div class="slide-inner">
+      <div class="slide-label">04 / STREAMLIT</div>
+      <div class="accent-bar" style="margin-bottom:10px;"></div>
+      <div class="eyebrow" style="margin-bottom:6px;">Introduction</div>
+      <h2 class="title" style="margin-bottom:8px; font-size:28px;">Why <span class="accent-word">Streamlit</span> Instead of Looker &amp; HubSpot?</h2>
+      <p class="body" style="margin-bottom:12px; font-size:15px; line-height:1.5;">
+        Comparing all three options side by side — pros, cons, and why Streamlit is the best fit for our QBR dashboard.
+      </p>
+
+      <div class="tool-compare-grid">
+        <div class="tool-card streamlit">
+          <div class="tool-name">Streamlit</div>
+          <div class="pc-block pros">
+            <div class="pc-label">Pros</div>
+            <ul class="pc-list">
+              <li><strong>Multi-source integration</strong> — HubSpot, databases, APIs, spreadsheets, and CSV in one dashboard</li>
+              <li><strong>Advanced analytics</strong> — Python-based custom logic, forecasting, segmentation, and AI insights</li>
+              <li><strong>Fast prototyping</strong> — build, test, and iterate quickly without heavy BI modeling</li>
+              <li><strong>Scalable</strong> — add features over time as business needs evolve</li>
+            </ul>
+          </div>
+          <div class="pc-block cons">
+            <div class="pc-label">Cons</div>
+            <ul class="pc-list">
+              <li><strong>Less plug-and-play</strong> — not as easy for non-technical users as HubSpot dashboards</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="tool-card looker">
+          <div class="tool-name">Looker</div>
+          <div class="pc-block pros">
+            <div class="pc-label">Pros</div>
+            <ul class="pc-list">
+              <li><strong>Enterprise BI</strong> — strong for governed reporting at scale</li>
+              <li><strong>Standardized metrics</strong> — reusable data models and shared definitions</li>
+            </ul>
+          </div>
+          <div class="pc-block cons">
+            <div class="pc-label">Cons</div>
+            <ul class="pc-list">
+              <li><strong>Heavier setup</strong> — more effort than Streamlit or HubSpot to get started</li>
+              <li><strong>Requires data modeling</strong> — dashboards aren't useful until models are built</li>
+              <li><strong>Less flexible</strong> — slower for rapid custom dashboard app development</li>
+              <li><strong>Overkill for ops dashboards</strong> — more complex than needed for a customized QBR view</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="tool-card hubspot">
+          <div class="tool-name">HubSpot</div>
+          <div class="pc-block pros">
+            <div class="pc-label">Pros</div>
+            <ul class="pc-list">
+              <li><strong>Easy for CRM users</strong> — quick to create basic dashboards without technical setup</li>
+              <li><strong>Real-time data</strong> — live deal and pipeline information from our main CRM</li>
+            </ul>
+          </div>
+          <div class="pc-block cons">
+            <div class="pc-label">Cons</div>
+            <ul class="pc-list">
+              <li><strong>Limited custom logic</strong> — less flexibility for advanced analytics</li>
+              <li><strong>Single-source focused</strong> — less suitable when pulling from multiple external systems</li>
+              <li><strong>Restricted layouts</strong> — fewer visualization and layout options</li>
+              <li><strong>CRM reporting only</strong> — better for CRM views than fully customized analytics</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-sm conclusion-box">
+        <span class="conclusion-label">Why we selected Streamlit — </span>
+        <span class="conclusion-text">Looker is built for enterprise BI but too heavy for a fast, customized QBR workflow. HubSpot is easy and real-time but can't combine multiple data sources or support advanced custom logic. Streamlit gives us the flexibility to integrate HubSpot with our own metrics, iterate quickly, and scale — making it the best fit for this dashboard.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───── SLIDE 5 · Dashboard Behaviour & Newbie Challenges ────────── -->
+  <div class="slide" id="s4">
+    <div class="slide-inner">
+      <div class="slide-label">05 / BEHAVIOUR</div>
+      <div class="accent-bar"></div>
+      <div class="eyebrow">Good to know upfront</div>
+      <h2 class="title" style="margin-bottom:18px;">Dashboard <span class="accent-word">Behaviour</span> &amp; Common Challenges</h2>
+
+      <div class="two-col" style="margin-bottom:16px;">
+        <div class="card">
+          <div style="font-size:13px; font-weight:700; color:var(--green); margin-bottom:12px; text-transform:uppercase; letter-spacing:.06em;">How the data works</div>
+          <ul class="feat-list" style="font-size:14px;">
+            <li>All operational data comes from <strong>HubSpot</strong> — synced roughly every hour</li>
+            <li>The dashboard <strong>refreshes</strong> each time you open it or click Rerun</li>
+            <li>Quarterly <strong>goal targets</strong> are updated manually when leadership sets them</li>
+            <li><strong>GRR</strong> is pulled from the GRR dashboard, not HubSpot</li>
+          </ul>
+          <hr class="sep" />
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <span class="chip green">Deals: ~1h lag</span>
+            <span class="chip green">Pipeline: ~1h lag</span>
+            <span class="chip amber">Goals: manual update</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div style="font-size:13px; font-weight:700; color:var(--amber); margin-bottom:12px; text-transform:uppercase; letter-spacing:.06em;">Challenges as a first-time user</div>
+          <ul class="feat-list" style="font-size:14px;">
+            <li><strong>Date filter confusion</strong> — each tab uses close date, create date, or subscription date differently</li>
+            <li><strong>Data lag (~1 hour)</strong> — for real-time deal status, cross-check HubSpot directly</li>
+            <li><strong>Numbers vs. old spreadsheets</strong> — metric logic is standardized here; this dashboard is the source of truth</li>
+            <li><strong>Access issues</strong> — first-time users need login credentials; contact the Data team if blocked</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card-sm" style="border-color:var(--amber); background:rgba(245,158,11,.06);">
+        <span style="font-size:13px; color:var(--amber); font-weight:600;">Tip — </span>
+        <span style="font-size:13px; color:var(--muted);">Data looks stale? Hit <strong>Rerun</strong> in the top-right. Streamlit may cache results for up to 10 minutes within a session.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───────────────────── SLIDE 6 · How to Use ─────────────────────── -->
+  <div class="slide" id="s5">
+    <div class="slide-inner">
+      <div class="slide-label">06 / ACCESS</div>
+      <div class="accent-bar"></div>
+      <div class="eyebrow">Getting started</div>
+      <h2 class="title" style="margin-bottom:20px;">How to <span class="accent-word">Access &amp; Use</span> the Dashboard</h2>
+
+      <div class="three-col" style="margin-bottom:20px;">
+        <div class="card-sm">
+          <div style="font-size:22px; font-weight:700; color:var(--accent); margin-bottom:6px;">① Open</div>
+          <div style="font-size:13px; color:var(--muted); line-height:1.6;">
+            Log in to <strong style="color:var(--text);">Snowflake</strong> → navigate to 
+            <strong style="color:var(--text);">Streamlit Apps</strong> or use the direct link shared by the data team.
+          </div>
+        </div>
+        <div class="card-sm">
+          <div style="font-size:22px; font-weight:700; color:var(--accent); margin-bottom:6px;">② Filter</div>
+          <div style="font-size:13px; color:var(--muted); line-height:1.6;">
+            The two most important filters are <strong style="color:var(--text);">Date (Quarter)</strong> and <strong style="color:var(--text);">Team</strong>.
+            Use <strong style="color:var(--text);">Quarter</strong> to set the reporting period and <strong style="color:var(--text);">Team</strong> to drill into a specific region.
+            Additional filters appear per tab as needed.
+          </div>
+        </div>
+        <div class="card-sm">
+          <div style="font-size:22px; font-weight:700; color:var(--accent); margin-bottom:6px;">③ Navigate</div>
+          <div style="font-size:13px; color:var(--muted); line-height:1.6;">
+            There are <strong style="color:var(--text);">5 tabs</strong>, each with a slightly different date context —
+            <strong style="color:var(--text);">close date</strong>, <strong style="color:var(--text);">create date</strong>, or <strong style="color:var(--text);">subscription date</strong> —
+            which is why each tab carries its own dedicated filter set.
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="border-color: var(--accent);">
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:8px;">
+          <div style="font-size:13px; font-weight:700; color:var(--accent); text-transform:uppercase; letter-spacing:.06em;">Dashboard URL</div>
+        </div>
+        <div class="code-block" style="margin-top:0;">
+          <span class="comment">// Open in Snowflake → Streamlit Apps</span><br>
+          <span class="keyword">https://</span><span class="string">app.snowflake.com/elsaorg/elsa</span><span class="keyword">/#/streamlit-apps/</span><br>
+          <span style="padding-left:16px; color:var(--text);">ANALYTICS_PROD.DASHBOARDS.B2B_BUSINESS_OVERVIEW_APP</span>
+        </div>
+      </div>
+
+      <div class="tag-strip">
+        <span class="tag">No install required</span>
+        <span class="tag">Works in Chrome / Safari / Edge</span>
+        <span class="tag">Snowflake login needed</span>
+        <span class="tag">Mobile-friendly</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───────────── SLIDE 7 · Tab Overview ─────────────────────────── -->
+  <div class="slide compact-slide" id="s6">
+    <div class="slide-inner wide">
+      <div class="slide-label">07 / TAB OVERVIEW</div>
+      <div class="accent-bar"></div>
+      <div class="eyebrow">Dashboard walkthrough</div>
+      <h2 class="title" style="font-size:28px; margin-bottom:12px;">Five Tabs · <span class="accent-word">One Dashboard</span></h2>
+
+      <div class="date-callout" style="margin-bottom:14px;">
+        <strong>Important:</strong> Each tab uses a <strong>different date basis</strong> — close date, create date, or subscription date. Always check which date logic applies before comparing numbers across tabs.
+      </div>
+
+      <div class="tab-overview-grid">
+        <div class="tab-overview-card">
+          <div class="tab-num">Tab 1</div>
+          <h4>QBR Scorecard</h4>
+          <span class="tab-date">Close Date</span>
+          <p>Overall business health for the quarter — every metric we set targets against, with <strong>actuals vs. goal</strong> side by side.</p>
+        </div>
+        <div class="tab-overview-card">
+          <div class="tab-num">Tab 2</div>
+          <h4>Forecasting &amp; Bookings</h4>
+          <span class="tab-date">Close Date</span>
+          <p>Performance against fiscal targets — <strong>attainment, gap to target</strong>, booked ACV, and won companies by segment.</p>
+        </div>
+        <div class="tab-overview-card">
+          <div class="tab-num">Tab 3</div>
+          <h4>Active ACV Snapshot</h4>
+          <span class="tab-date">Subscription Date</span>
+          <p>Current recurring revenue base — <strong>active customers, active ACV</strong>, and upcoming renewal exposure by quarter.</p>
+        </div>
+        <div class="tab-overview-card">
+          <div class="tab-num">Tab 4</div>
+          <h4>Pipeline Creation</h4>
+          <span class="tab-date">Create Date</span>
+          <p>Pipeline generation and conversion — <strong>how much was created</strong> and how effectively it converts to won bookings.</p>
+        </div>
+        <div class="tab-overview-card span-full">
+          <div class="tab-num">Tab 5</div>
+          <h4>Sales Analytics</h4>
+          <span class="tab-date">Close Date</span>
+          <p>Closing efficiency and revenue mix — <strong>win rates, new vs. existing customers, deal size distribution</strong>, and sales cycle length.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───────────── SLIDE 8 · Metrics Definition ───────────────────── -->
+  <div class="slide compact-slide" id="s7">
+    <div class="slide-inner wide">
+      <div class="slide-label">08 / METRICS</div>
+      <div class="accent-bar"></div>
+      <div class="eyebrow">Reference</div>
+      <h2 class="title" style="font-size:28px; margin-bottom:10px;">Metrics <span class="accent-word">Definition</span></h2>
+      <p class="body" style="font-size:13px; margin-bottom:12px;">All metrics across the five tabs — scroll down to see the full list.</p>
+      <div class="metric-table-wrap tall">
+        <table class="metric-table all-metrics">
+          <thead>
+            <tr><th>Tab</th><th>Metric</th><th>Definition</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="tab-col" rowspan="9">QBR Scorecard</td>
+              <td class="metric-col">ACV Booked</td>
+              <td>Annual Contract Value that has been secured in fiscal period (based on the Deal Close Date), coming from new contracts, renewal of expiring contracts, or incremental upsell of active contracts.</td>
+            </tr>
+            <tr><td class="metric-col">New ACV</td><td>Incremental New Annual Contract Value that has been secured in fiscal period, coming from new contracts, cross-sells, mid-term upsells, and any transactional deals that don't have renewal base.</td></tr>
+            <tr><td class="metric-col">Renewal ACV</td><td>Retained Annual Contract Value that has been secured in fiscal period, coming from renewal of subscriptions expiring in current, previous (late renewals), or next (early renewals) fiscal quarter. Renewal ACV includes flat renewals, renewals w/ upsell, renewals w/ downsell.</td></tr>
+            <tr><td class="metric-col">GRR (%)</td><td>Percentage of existing subscription-based recurring revenue that successfully retained over a period of time, ignoring any new sales, upsells, or cross-sells. Gross Retention is calculated based on Subscription Dates, ignoring Close Date of renewals. Only renewals within 30 days from Subscription End Date included in the GRR balance.</td></tr>
+            <tr><td class="metric-col">New Pipeline Created ($M)</td><td>Total value of qualified new opportunities (New Business Pipeline, including deal types: One-Time, New Contract, Cross-Sell, Mid-Term Upsell) created during the fiscal period. Based on the deals creation date and ignores Close Date and Status.</td></tr>
+            <tr><td class="metric-col"># of New Deal Created (SAO)</td><td>Number of new Deals (SAO) created during the fiscal period (New Business Pipeline, including deal types: One-Time, New Contract, Cross-Sell, Mid-Term Upsell). Based on the deals creation date and ignores Close Date and Status.</td></tr>
+            <tr><td class="metric-col"># of New Trial Completed</td><td>Number of deals exited Trial stage during the fiscal period (New Business Pipeline, including deal types: One-Time, New Contract, Cross-Sell, Mid-Term Upsell). Based on Trial Completion Date and ignores Close Date and Status.</td></tr>
+            <tr><td class="metric-col"># of New Deal Closed</td><td>Number of new deals that have been successfully closed won during the fiscal period (New Business Pipeline, including deal types: One-Time, New Contract, Cross-Sell, Mid-Term Upsell). Based on the deal Close Date.</td></tr>
+            <tr><td class="metric-col">Average ACV per New Deal ($K)</td><td>Average Annual Contract Value generated per new customer (Deal Type = One-Time, New Contract, Cross-Sell, Mid-Term Upsell), calculated as total New ACV divided by the number of new customers acquired in the fiscal period.</td></tr>
+
+            <tr>
+              <td class="tab-col" rowspan="3">Forecasting &amp; Bookings</td>
+              <td class="metric-col">Forecasting</td>
+              <td>Tracks sales performance against the fiscal period target, including target amount, actual booked amount, current attainment, gap to target, and the current pipeline amount available to support target achievement.</td>
+            </tr>
+            <tr><td class="metric-col">ACV</td><td>Annual Contract Value secured in the fiscal period, calculated by summing Amount (USD) from closed-won deals. ACV can be broken down by key segments such as region, team, deal type, business type, or customer segment.</td></tr>
+            <tr><td class="metric-col">Won Companies</td><td>Number of unique companies with at least one successfully closed-won deal during the fiscal period. Termination deals/accounts are excluded from the calculation.</td></tr>
+
+            <tr>
+              <td class="tab-col" rowspan="3">Active ACV Snapshot</td>
+              <td class="metric-col">Active Customers by Quarter</td>
+              <td>Number of unique customers who hold an active subscription as of the respective quarter.</td>
+            </tr>
+            <tr><td class="metric-col">Active ACV by Quarter</td><td>Total ACV amount associated with active subscriptions as of the respective quarter.</td></tr>
+            <tr><td class="metric-col">Expiring ACV by Quarter</td><td>Total ACV amount associated with subscriptions that are scheduled to expire within the respective quarter.</td></tr>
+
+            <tr>
+              <td class="tab-col" rowspan="3">Pipeline Creation</td>
+              <td class="metric-col">Pipeline Created</td>
+              <td>Total pipeline value generated within a specific period, based on the deal create date.</td>
+            </tr>
+            <tr><td class="metric-col">Bookings by Create Date</td><td>Total won amount from deals created within a specific period, based on the deal create date.</td></tr>
+            <tr><td class="metric-col">Conversion Rate</td><td>Calculated as the percentage of pipeline created within a specific period that converted into won bookings.</td></tr>
+
+            <tr>
+              <td class="tab-col" rowspan="7">Sales Analytics</td>
+              <td class="metric-col">ACV Win Rate</td>
+              <td>Percentage of ACV won out of the total ACV from closed opportunities within a specific period.</td>
+            </tr>
+            <tr><td class="metric-col">Logos Win Rate</td><td>Percentage of logos won out of the total closed opportunities within a specific period.</td></tr>
+            <tr><td class="metric-col">New vs. Existing Logo Distribution</td><td>Proportion of total won logos from new customers versus existing customers within a specific period.</td></tr>
+            <tr><td class="metric-col">New vs. Existing ACV Distribution</td><td>Proportion of total won ACV from new business versus existing customer business, including renewals and upsells, within a specific period.</td></tr>
+            <tr><td class="metric-col"># of Deals by Deal Size</td><td>Number of closed deals segmented by predefined deal size categories (small, medium, and large) within a specific period.</td></tr>
+            <tr><td class="metric-col">ACV by Deal Size</td><td>Total ACV from closed deals segmented by predefined deal size categories within a specific period.</td></tr>
+            <tr><td class="metric-col">Avg Sales Cycle (Days) — New Business</td><td>Average number of days from opportunity creation to closed-won date for new business deals within a specific period.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───────────────────── SLIDE 9 · Q&A & Thank You ─────────────────── -->
+  <div class="slide" id="s8">
+    <div class="slide-inner" style="text-align:center; max-width:640px;">
+      <div class="slide-label">09 / Q&amp;A</div>
+      <div class="accent-bar" style="margin:0 auto 24px;"></div>
+      <div class="eyebrow">Open floor</div>
+      <h2 class="title" style="margin-bottom:12px; font-size:42px;">Questions &amp;<br><span class="accent-word">Thank You</span></h2>
+      <p class="body" style="font-size:16px; margin-bottom:32px; color:var(--muted);">
+        We hope this walkthrough helps you get the most from the B2B Business Overview dashboard.
+      </p>
+
+      <div class="qa-card highlight" style="margin-bottom:32px;">
+        <div class="qa-label">Need help?</div>
+        <div style="font-size:17px; font-weight:600; color:var(--text); margin-bottom:4px;">
+          For any concerns, please reach out to <span style="color:var(--accent);">RevOps</span>
+        </div>
+        <div class="qa-topics">
+          <span class="qa-topic">Access</span>
+          <span class="qa-topic">Data accuracy</span>
+          <span class="qa-topic">Comment / suggestion</span>
+        </div>
+      </div>
+
+      <p class="qa-thanks">Thank you for your time — happy reviewing!</p>
+    </div>
+  </div>
+
+</div><!-- /deck -->
+
+<!-- Navigation -->
+<div id="nav">
+  <button class="nav-btn" id="btn-prev" onclick="go(-1)" disabled>← Prev</button>
+  <div class="dot-row" id="dots"></div>
+  <span id="slide-counter">1 / 9</span>
+  <button class="nav-btn" id="btn-next" onclick="go(1)">Next →</button>
+</div>
+
+<script>
+  const total = 9;
+  let cur = 0;
+
+  const slides = document.querySelectorAll('.slide');
+  const dotsEl = document.getElementById('dots');
+  const counter = document.getElementById('slide-counter');
+  const fill = document.getElementById('progress-fill');
+  const btnPrev = document.getElementById('btn-prev');
+  const btnNext = document.getElementById('btn-next');
+
+  // Build dots
+  for (let i = 0; i < total; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.onclick = () => goTo(i);
+    dotsEl.appendChild(d);
+  }
+
+  function goTo(n) {
+    if (n < 0 || n >= total) return;
+    const leaving = slides[cur];
+    // Remove active, add exit so it animates out to the left
+    leaving.classList.remove('active');
+    leaving.classList.add('exit');
+    // Clean up exit class after animation finishes
+    setTimeout(() => leaving.classList.remove('exit'), 380);
+    cur = n;
+    // New slide animates in from the right
+    slides[cur].classList.add('active');
+    update();
+  }
+
+  function go(dir) { goTo(cur + dir); }
+
+  function update() {
+    counter.textContent = `${cur + 1} / ${total}`;
+    fill.style.width = `${((cur + 1) / total) * 100}%`;
+    btnPrev.disabled = cur === 0;
+    btnNext.disabled = cur === total - 1;
+    dotsEl.querySelectorAll('.dot').forEach((d, i) => {
+      d.classList.toggle('active', i === cur);
+    });
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); go(1); }
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')                    { e.preventDefault(); go(-1); }
+  });
+
+  update();
+</script>
+</body>
+</html>
