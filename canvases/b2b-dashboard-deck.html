@@ -799,7 +799,7 @@
         <div class="card-sm">
           <div style="font-size:13px; font-weight:700; color:var(--accent); margin-bottom:6px;">Data sources</div>
           <ul class="feat-list" style="font-size:13px;">
-            <li><strong>HubSpot</strong> — deals, pipeline stages, and most operational metrics</li>
+            <li><strong>HubSpot</strong> — all bookings, deals, companies, and other operational data points</li>
             <li><strong>Quarterly goals</strong> — updated manually when targets are set (fixed each quarter)</li>
             <li><strong>GRR</strong> — sourced from the GRR dashboard, not HubSpot</li>
           </ul>
@@ -900,7 +900,7 @@
           <div style="font-size:13px; font-weight:700; color:var(--green); margin-bottom:12px; text-transform:uppercase; letter-spacing:.06em;">How the data works</div>
           <ul class="feat-list" style="font-size:14px;">
             <li>All operational data comes from <strong>HubSpot</strong> — synced roughly every hour</li>
-            <li>The dashboard <strong>refreshes</strong> each time you open it or click Rerun</li>
+            <li>The dashboard <strong>refreshes</strong> every time you open it or reload the page</li>
             <li>Quarterly <strong>goal targets</strong> are updated manually when leadership sets them</li>
             <li><strong>GRR</strong> is pulled from the GRR dashboard, not HubSpot</li>
           </ul>
@@ -917,7 +917,6 @@
           <ul class="feat-list" style="font-size:14px;">
             <li><strong>Date filter confusion</strong> — each tab uses close date, create date, or subscription date differently</li>
             <li><strong>Data lag (~1 hour)</strong> — for real-time deal status, cross-check HubSpot directly</li>
-            <li><strong>Numbers vs. old spreadsheets</strong> — metric logic is standardized here; this dashboard is the source of truth</li>
             <li><strong>Access issues</strong> — first-time users need login credentials; contact the Data team if blocked</li>
           </ul>
         </div>
@@ -925,7 +924,7 @@
 
       <div class="card-sm" style="border-color:var(--amber); background:rgba(245,158,11,.06);">
         <span style="font-size:13px; color:var(--amber); font-weight:600;">Tip — </span>
-        <span style="font-size:13px; color:var(--muted);">Data looks stale? Hit <strong>Rerun</strong> in the top-right. Streamlit may cache results for up to 10 minutes within a session.</span>
+        <span style="font-size:13px; color:var(--muted);">Data looks stale? <strong>Refresh</strong> by reopening the dashboard or reloading the page.</span>
       </div>
     </div>
   </div>
@@ -1007,13 +1006,13 @@
           <div class="tab-num">Tab 2</div>
           <h4>Forecasting &amp; Bookings</h4>
           <span class="tab-date">Close Date</span>
-          <p>Performance against fiscal targets — <strong>attainment, gap to target</strong>, booked ACV, and won companies by segment.</p>
+          <p>Showing the forecast of future bookings across all forecast categories, plus <strong>ACV booked</strong> and <strong># of companies</strong> broken down by key segments — industry, team, ELSA solution sold, and more.</p>
         </div>
         <div class="tab-overview-card">
           <div class="tab-num">Tab 3</div>
           <h4>Active ACV Snapshot</h4>
           <span class="tab-date">Subscription Date</span>
-          <p>Current recurring revenue base — <strong>active customers, active ACV</strong>, and upcoming renewal exposure by quarter.</p>
+          <p>Helps the team understand the <strong>current active revenue base</strong> for a selected quarter — active customers, active ACV, and upcoming renewal exposure.</p>
         </div>
         <div class="tab-overview-card">
           <div class="tab-num">Tab 4</div>
@@ -1025,7 +1024,7 @@
           <div class="tab-num">Tab 5</div>
           <h4>Sales Analytics</h4>
           <span class="tab-date">Close Date</span>
-          <p>Closing efficiency and revenue mix — <strong>win rates, new vs. existing customers, deal size distribution</strong>, and sales cycle length.</p>
+          <p>Helps us understand the <strong>quality of our sales performance</strong> — win rate, deal size, new versus existing revenue, and sales cycle — so we can see what is working well and where we may need to improve.</p>
         </div>
       </div>
     </div>
