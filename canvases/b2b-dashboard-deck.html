@@ -699,6 +699,49 @@
     line-height: 1.55;
   }
   .date-callout strong { color: var(--text); }
+
+  /* ── Access steps (slide 6) ─────────────────────────────────────── */
+  .access-steps {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+  .access-step {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .access-step-num {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    font-weight: 700;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .access-step-body h4 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .access-step-body p {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+  .access-step-body p strong { color: var(--text); }
+  .access-step.span-full { grid-column: 1 / -1; }
 </style>
 </head>
 <body>
@@ -931,54 +974,45 @@
 
   <!-- ───────────────────── SLIDE 6 · How to Use ─────────────────────── -->
   <div class="slide" id="s5">
-    <div class="slide-inner">
+    <div class="slide-inner" style="max-width:960px;">
       <div class="slide-label">06 / ACCESS</div>
       <div class="accent-bar"></div>
       <div class="eyebrow">Getting started</div>
-      <h2 class="title" style="margin-bottom:20px;">How to <span class="accent-word">Access &amp; Use</span> the Dashboard</h2>
+      <h2 class="title" style="margin-bottom:18px;">How to <span class="accent-word">Access &amp; Use</span> the Dashboard</h2>
 
-      <div class="three-col" style="margin-bottom:20px;">
-        <div class="card-sm">
-          <div style="font-size:22px; font-weight:700; color:var(--accent); margin-bottom:6px;">① Open</div>
-          <div style="font-size:13px; color:var(--muted); line-height:1.6;">
-            Log in to <strong style="color:var(--text);">Snowflake</strong> → navigate to 
-            <strong style="color:var(--text);">Streamlit Apps</strong> or use the direct link shared by the data team.
+      <div class="access-steps">
+        <div class="access-step span-full">
+          <div class="access-step-num">1</div>
+          <div class="access-step-body">
+            <h4>Open the link</h4>
+            <p>Use the dashboard URL below — no install required. Works in Chrome, Safari, or Edge.</p>
+            <div class="code-block" style="margin-top:10px; font-size:12px;">
+              <span class="keyword">https://</span><span class="string">app.snowflake.com/elsaorg/elsa</span><span class="keyword">/#/streamlit-apps/</span><br>
+              <span style="color:var(--text);">ANALYTICS_PROD.DASHBOARDS.B2B_BUSINESS_OVERVIEW_APP</span>
+            </div>
           </div>
         </div>
-        <div class="card-sm">
-          <div style="font-size:22px; font-weight:700; color:var(--accent); margin-bottom:6px;">② Filter</div>
-          <div style="font-size:13px; color:var(--muted); line-height:1.6;">
-            The two most important filters are <strong style="color:var(--text);">Date (Quarter)</strong> and <strong style="color:var(--text);">Team</strong>.
-            Use <strong style="color:var(--text);">Quarter</strong> to set the reporting period and <strong style="color:var(--text);">Team</strong> to drill into a specific region.
-            Additional filters appear per tab as needed.
+        <div class="access-step">
+          <div class="access-step-num">2</div>
+          <div class="access-step-body">
+            <h4>Log in via SSO</h4>
+            <p>Sign in with your <strong>Snowflake SSO</strong> credentials when prompted. First-time users who cannot log in should contact the Data team for access.</p>
           </div>
         </div>
-        <div class="card-sm">
-          <div style="font-size:22px; font-weight:700; color:var(--accent); margin-bottom:6px;">③ Navigate</div>
-          <div style="font-size:13px; color:var(--muted); line-height:1.6;">
-            There are <strong style="color:var(--text);">5 tabs</strong>, each with a slightly different date context —
-            <strong style="color:var(--text);">close date</strong>, <strong style="color:var(--text);">create date</strong>, or <strong style="color:var(--text);">subscription date</strong> —
-            which is why each tab carries its own dedicated filter set.
+        <div class="access-step">
+          <div class="access-step-num">3</div>
+          <div class="access-step-body">
+            <h4>Set your filters</h4>
+            <p>Choose <strong>Team</strong>, <strong>Date (Quarter)</strong>, and any other filters for the view you need. Additional filters may appear depending on the tab.</p>
           </div>
         </div>
-      </div>
-
-      <div class="card" style="border-color: var(--accent);">
-        <div style="display:flex; align-items:center; gap:12px; margin-bottom:8px;">
-          <div style="font-size:13px; font-weight:700; color:var(--accent); text-transform:uppercase; letter-spacing:.06em;">Dashboard URL</div>
+        <div class="access-step span-full">
+          <div class="access-step-num">4</div>
+          <div class="access-step-body">
+            <h4>Navigate between the 5 tabs</h4>
+            <p>Each tab covers a different part of the business (scorecard, bookings, active ACV, pipeline, sales analytics). <strong>Re-apply your filters when you switch tabs</strong> — filter settings do not always carry over automatically.</p>
+          </div>
         </div>
-        <div class="code-block" style="margin-top:0;">
-          <span class="comment">// Open in Snowflake → Streamlit Apps</span><br>
-          <span class="keyword">https://</span><span class="string">app.snowflake.com/elsaorg/elsa</span><span class="keyword">/#/streamlit-apps/</span><br>
-          <span style="padding-left:16px; color:var(--text);">ANALYTICS_PROD.DASHBOARDS.B2B_BUSINESS_OVERVIEW_APP</span>
-        </div>
-      </div>
-
-      <div class="tag-strip">
-        <span class="tag">No install required</span>
-        <span class="tag">Works in Chrome / Safari / Edge</span>
-        <span class="tag">Snowflake login needed</span>
-        <span class="tag">Mobile-friendly</span>
       </div>
     </div>
   </div>
