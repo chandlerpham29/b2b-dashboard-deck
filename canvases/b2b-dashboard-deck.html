@@ -596,6 +596,14 @@
   }
   .pc-block.pros .pc-label { color: var(--green); }
   .pc-block.cons .pc-label { color: var(--red); }
+  .pc-block.handle .pc-label { color: var(--accent); }
+  .pc-block.handle .pc-note {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.45;
+    margin: 0;
+  }
+  .pc-block.handle .pc-note strong { color: var(--text); }
   .pc-list {
     list-style: none;
     margin: 0;
@@ -877,8 +885,11 @@
             <div class="pc-label">Cons</div>
             <ul class="pc-list">
               <li><strong>Less plug-and-play</strong> — not as easy for non-technical users as HubSpot dashboards</li>
-              <li><strong>TriDash addresses this</strong> — our in-house AI toolkit guides Claude &amp; Cursor to build a production dashboard from a plain-English brief</li>
             </ul>
+          </div>
+          <div class="pc-block handle">
+            <div class="pc-label">How we handle this</div>
+            <p class="pc-note"><strong>TriDash</strong> — our in-house AI toolkit that guides Claude &amp; Cursor to build a production dashboard from a plain-English brief</p>
           </div>
         </div>
 
@@ -944,7 +955,7 @@
           <ul class="feat-list" style="font-size:14px;">
             <li>All operational data comes from <strong>HubSpot</strong> — updated once per day</li>
             <li>The dashboard <strong>refreshes</strong> every time you open it or reload the page</li>
-            <li>Quarterly <strong>goal targets</strong> are updated manually when leadership sets them</li>
+            <li>Quarterly <strong>goal targets</strong> are updated once manually — then fixed for the quarter</li>
           </ul>
         </div>
 
@@ -1125,33 +1136,40 @@
     </div>
   </div>
 
-  <!-- ───────────── SLIDE 9 · Next Steps & Quick Question ───────────── -->
+  <!-- ───────────── SLIDE 9 · Next Steps ─────────────────────────────── -->
   <div class="slide" id="s8">
-    <div class="slide-inner" style="max-width:860px;">
+    <div class="slide-inner" style="max-width:760px;">
       <div class="slide-label">09 / NEXT STEPS</div>
       <div class="accent-bar"></div>
-      <div class="eyebrow">Before we wrap up</div>
-      <h2 class="title" style="margin-bottom:18px;">Next Steps &amp; <span class="accent-word">Quick Question</span></h2>
+      <div class="eyebrow">Your turn</div>
+      <h2 class="title" style="margin-bottom:22px;">Next <span class="accent-word">Steps</span></h2>
 
-      <div class="two-col" style="margin-bottom:16px;">
-        <div class="card">
-          <div style="font-size:13px; font-weight:700; color:var(--green); margin-bottom:12px; text-transform:uppercase; letter-spacing:.06em;">Part 1 · Next steps</div>
-          <ul class="feat-list" style="font-size:14px;">
-            <li><strong>Log in</strong> and confirm you have access to the dashboard</li>
-            <li><strong>Start filtering</strong> and check all the data points across the tabs</li>
-          </ul>
+      <div class="access-steps" style="margin-bottom:20px;">
+        <div class="access-step">
+          <div class="access-step-num">1</div>
+          <div class="access-step-body">
+            <h4>Log in and confirm access</h4>
+            <p>Open the dashboard and make sure you can sign in successfully.</p>
+          </div>
         </div>
+        <div class="access-step">
+          <div class="access-step-num">2</div>
+          <div class="access-step-body">
+            <h4>Start filtering and explore</h4>
+            <p>Apply your filters and check the data points across all five tabs.</p>
+          </div>
+        </div>
+      </div>
 
-        <div class="card">
-          <div style="font-size:13px; font-weight:700; color:var(--accent); margin-bottom:12px; text-transform:uppercase; letter-spacing:.06em;">Part 2 · Quick question</div>
-          <p class="body" style="font-size:14px; margin-bottom:12px;">
-            Can everyone go into the dashboard and check the <strong>target number for Q2</strong>?
-          </p>
-          <ul class="feat-list" style="font-size:14px;">
-            <li><strong>Sales team</strong> — your <strong>regional number</strong></li>
-            <li><strong>Other teams</strong> — the <strong>total B2B number</strong></li>
-          </ul>
-        </div>
+      <div class="card-sm" style="border-color:var(--accent); background:rgba(99,102,241,.06); padding:18px 20px;">
+        <div style="font-size:13px; font-weight:700; color:var(--accent); margin-bottom:8px; text-transform:uppercase; letter-spacing:.06em;">Quick check</div>
+        <p class="body" style="font-size:15px; margin-bottom:12px; line-height:1.55;">
+          A quick way to see if everyone followed along — go into the dashboard and find the <strong>target number for Q2</strong>:
+        </p>
+        <ul class="feat-list" style="font-size:14px;">
+          <li><strong>Sales team</strong> — your <strong>regional number</strong></li>
+          <li><strong>Other teams</strong> — the <strong>total B2B number</strong></li>
+        </ul>
       </div>
     </div>
   </div>
@@ -1170,7 +1188,7 @@
       <div class="qa-card highlight" style="margin-bottom:32px;">
         <div class="qa-label">Need help?</div>
         <div style="font-size:17px; font-weight:600; color:var(--text); margin-bottom:4px;">
-          For any concerns, please reach out to <span style="color:var(--accent);">RevOps</span>
+          For any concerns, reach out to RevOps in Slack: <span style="color:var(--accent);">#revops-general</span>
         </div>
         <div class="qa-topics">
           <span class="qa-topic">Access</span>
