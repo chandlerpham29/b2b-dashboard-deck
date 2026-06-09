@@ -871,13 +871,13 @@
               <li><strong>Multi-source integration</strong> — HubSpot, databases, APIs, spreadsheets, and CSV in one dashboard</li>
               <li><strong>Advanced analytics</strong> — Python-based custom logic, forecasting, segmentation, and AI insights</li>
               <li><strong>Fast prototyping</strong> — build, test, and iterate quickly without heavy BI modeling</li>
-              <li><strong>Scalable</strong> — add features over time as business needs evolve</li>
             </ul>
           </div>
           <div class="pc-block cons">
             <div class="pc-label">Cons</div>
             <ul class="pc-list">
               <li><strong>Less plug-and-play</strong> — not as easy for non-technical users as HubSpot dashboards</li>
+              <li><strong>TriDash addresses this</strong> — our in-house AI toolkit guides Claude &amp; Cursor to build a production dashboard from a plain-English brief</li>
             </ul>
           </div>
         </div>
@@ -897,7 +897,7 @@
               <li><strong>Heavier setup</strong> — more effort than Streamlit or HubSpot to get started</li>
               <li><strong>Requires data modeling</strong> — dashboards aren't useful until models are built</li>
               <li><strong>Less flexible</strong> — slower for rapid custom dashboard app development</li>
-              <li><strong>Overkill for ops dashboards</strong> — more complex than needed for a customized QBR view</li>
+              <li><strong>Too technical</strong> — difficult for non-code users to update and maintain</li>
             </ul>
           </div>
         </div>
@@ -942,24 +942,16 @@
         <div class="card">
           <div style="font-size:13px; font-weight:700; color:var(--green); margin-bottom:12px; text-transform:uppercase; letter-spacing:.06em;">How the data works</div>
           <ul class="feat-list" style="font-size:14px;">
-            <li>All operational data comes from <strong>HubSpot</strong> — synced roughly every hour</li>
+            <li>All operational data comes from <strong>HubSpot</strong> — updated once per day</li>
             <li>The dashboard <strong>refreshes</strong> every time you open it or reload the page</li>
             <li>Quarterly <strong>goal targets</strong> are updated manually when leadership sets them</li>
-            <li><strong>GRR</strong> is pulled from the GRR dashboard, not HubSpot</li>
           </ul>
-          <hr class="sep" />
-          <div style="display:flex; gap:8px; flex-wrap:wrap;">
-            <span class="chip green">Deals: ~1h lag</span>
-            <span class="chip green">Pipeline: ~1h lag</span>
-            <span class="chip amber">Goals: manual update</span>
-          </div>
         </div>
 
         <div class="card">
           <div style="font-size:13px; font-weight:700; color:var(--amber); margin-bottom:12px; text-transform:uppercase; letter-spacing:.06em;">Challenges as a first-time user</div>
           <ul class="feat-list" style="font-size:14px;">
             <li><strong>Date filter confusion</strong> — each tab uses close date, create date, or subscription date differently</li>
-            <li><strong>Data lag (~1 hour)</strong> — for real-time deal status, cross-check HubSpot directly</li>
             <li><strong>Access issues</strong> — first-time users need login credentials; contact the Data team if blocked</li>
           </ul>
         </div>
@@ -1133,10 +1125,41 @@
     </div>
   </div>
 
-  <!-- ───────────────────── SLIDE 9 · Q&A & Thank You ─────────────────── -->
+  <!-- ───────────── SLIDE 9 · Next Steps & Quick Question ───────────── -->
   <div class="slide" id="s8">
+    <div class="slide-inner" style="max-width:860px;">
+      <div class="slide-label">09 / NEXT STEPS</div>
+      <div class="accent-bar"></div>
+      <div class="eyebrow">Before we wrap up</div>
+      <h2 class="title" style="margin-bottom:18px;">Next Steps &amp; <span class="accent-word">Quick Question</span></h2>
+
+      <div class="two-col" style="margin-bottom:16px;">
+        <div class="card">
+          <div style="font-size:13px; font-weight:700; color:var(--green); margin-bottom:12px; text-transform:uppercase; letter-spacing:.06em;">Part 1 · Next steps</div>
+          <ul class="feat-list" style="font-size:14px;">
+            <li><strong>Log in</strong> and confirm you have access to the dashboard</li>
+            <li><strong>Start filtering</strong> and check all the data points across the tabs</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <div style="font-size:13px; font-weight:700; color:var(--accent); margin-bottom:12px; text-transform:uppercase; letter-spacing:.06em;">Part 2 · Quick question</div>
+          <p class="body" style="font-size:14px; margin-bottom:12px;">
+            Can everyone go into the dashboard and check the <strong>target number for Q2</strong>?
+          </p>
+          <ul class="feat-list" style="font-size:14px;">
+            <li><strong>Sales team</strong> — your <strong>regional number</strong></li>
+            <li><strong>Other teams</strong> — the <strong>total B2B number</strong></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───────────────────── SLIDE 10 · Q&A & Thank You ─────────────────── -->
+  <div class="slide" id="s9">
     <div class="slide-inner" style="text-align:center; max-width:640px;">
-      <div class="slide-label">09 / Q&amp;A</div>
+      <div class="slide-label">10 / Q&amp;A</div>
       <div class="accent-bar" style="margin:0 auto 24px;"></div>
       <div class="eyebrow">Open floor</div>
       <h2 class="title" style="margin-bottom:12px; font-size:42px;">Questions &amp;<br><span class="accent-word">Thank You</span></h2>
@@ -1166,12 +1189,12 @@
 <div id="nav">
   <button class="nav-btn" id="btn-prev" onclick="go(-1)" disabled>← Prev</button>
   <div class="dot-row" id="dots"></div>
-  <span id="slide-counter">1 / 9</span>
+  <span id="slide-counter">1 / 10</span>
   <button class="nav-btn" id="btn-next" onclick="go(1)">Next →</button>
 </div>
 
 <script>
-  const total = 9;
+  const total = 10;
   let cur = 0;
 
   const slides = document.querySelectorAll('.slide');
